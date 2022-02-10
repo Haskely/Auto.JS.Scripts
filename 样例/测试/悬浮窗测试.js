@@ -13,8 +13,21 @@ const _Attention = {
                 <text id="text" text="" textSize="15sp" textColor="#000000" />
             </frame>
         );
-        window.setTouchable(false);
+        window.setTouchable(true);
         window.setSize(-2, -2);
+
+        window.card.setOnTouchListener(function (view, event) {
+            x = event.getRawX();
+            y = event.getRawY();
+            switch (event.getAction()) {
+                
+                case event.ACTION_DOWN:
+                    log('按下了 x: ' + x + ' y: ' + y);
+                case event.ACTION_UP:
+                    log('松开了 x: ' + x + ' y: ' + y);
+            };
+            return true;
+        });
 
         _Attention.window = window;
         _Attention._applyAttentionDesc();
@@ -43,7 +56,7 @@ const _Attention = {
         _Attention.attentionDesc.h = h;
         
         _Attention.attentionDesc.text = text == null ? "" : text;
-        _Attention.attentionDesc.alpha = alpha == null ? 0.5 : alpha;
+        _Attention.attentionDesc.alpha = alpha == null ? 0.0 : alpha;
 
         if (_Attention.window != null) {
             _Attention._applyAttentionDesc();
@@ -67,5 +80,12 @@ _Attention.start();
 _Attention.setAttentionArea(500,500,500,200,"啊啦啦啦啦");
 sleep(1000);
 _Attention.setAttentionArea(100,500,700,300,"(●'◡'●)");
+sleep(1000);
 
-setInterval(()=>{},1000)
+// const num_1 = id('').findOne(1000);
+// const keyboard = num_1.parent();
+
+rect = keyboard.bounds();
+[x, y, w, h] = [rect.left, rect.top, rect.width(), rect.height()];
+_Attention.setAttentionArea(x, y, w, h,"密码键盘");
+setInterval(()=>{},1000);

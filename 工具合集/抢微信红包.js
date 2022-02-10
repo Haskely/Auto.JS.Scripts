@@ -17,7 +17,9 @@ const setAttention = (uiObj, text) => {
     if (uiObj != null) {
         rect = uiObj.bounds();
         [x, y, w, h] = [rect.left, rect.top, rect.width(), rect.height()];
-    };
+    } else {
+        [x, y, w, h] = [Control.window.getX(), Control.window.getY() + Control.window.height, 0, 0];
+    }
     Attention.setAttentionArea(x, y, w, h, _getDynamicChar() + '>' + text, 0.5);
 };
 
@@ -77,7 +79,7 @@ const onLookScreenFunc = () => {
     if (hongbaotexts.nonEmpty()) {
         const used_hongbaoobjs = new Array();
         hongbaotexts.forEach((hbtext) => {
-            setAttention(hbtext, "发现红包文本，验证是否为红包！");
+            // setAttention(hbtext, "发现红包文本，验证是否为红包！");
             const hongbaoobj = gethongbaoobj(hbtext);
             if (hongbaoobj != null) {
                 if (hongbaoobj.findOne(textContains("已")) != null) {

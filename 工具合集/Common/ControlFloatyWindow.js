@@ -9,15 +9,13 @@ const _Control = {
     start: () => {
         const window = floaty.rawWindow(
             <frame id="frame" gravity="center">
-                <card id="button" w="300px" h="150px" foreground="?selectableItemBackground" cardBackgroundColor="#ffffffff" cardCornerRadius="10dp" gravity="center">
+                <card id="button" w="300px" h="150px" alpha = "0.7" foreground="?selectableItemBackground"  cardCornerRadius="10dp" gravity="center">
                     <text id="text" text="" textSize="21sp" margin="10" textStyle="bold" typeface="monospace" layout_gravity="center" gravity="center" />
                 </card>
             </frame>
         );
         window.setSize(-2, -2);
         window.setPosition(device.width * 0.5, device.height * 0.25);
-
-        const color_str = window.button.attr("cardBackgroundColor");
         const _touchVar = {
             down_win_x: null,
             down_win_y: null,
@@ -27,10 +25,10 @@ const _Control = {
 
             longclickThresholdMs: 500, // 500 ms
             origin_button_color: {
-                a: colors.alpha(color_str),
-                r: colors.red(color_str),
-                b: colors.blue(color_str),
-                g: colors.green(color_str)
+                a: 255,
+                r: 200,
+                b: 200,
+                g: 100
             },
             longclick_button_color: { a: 255, r: 255, b: 0, g: 0 },
             longclickColorIntervalID: null,
@@ -38,36 +36,38 @@ const _Control = {
             isPressing: false,
 
         };
-        window.button.setOnTouchListener(function (view, event) {
-            const colorObj2Str = (colorObj) => { return colors.toString(colors.argb(colorObj.a, colorObj.r, colorObj.g, colorObj.b)) };
-
-            const onPressing = () => {
-                let k = 0;
-                if (_touchVar.isPressing) {
-                    const touchDuration = new Date().getTime() - _touchVar.down_touch_time;
-                    k = touchDuration / _touchVar.longclickThresholdMs;
-                } else {
-                    clearInterval(_touchVar.longclickColorIntervalID);
-                };
-
-                if (k < 1.0) {
-                    if (_Control.window.button.text.text() == _Control.clickThing.longclickText) {
-                        _Control.window.button.text.setText(_Control.running ? _Control.clickThing.stopText : _Control.clickThing.startText);
-                    };
-                    const oColor = _touchVar.origin_button_color;
-                    const tColor = _touchVar.longclick_button_color;
-                    const curColor = {};
-
-                    for (let x in oColor) {
-                        curColor[x] = (tColor[x] - oColor[x]) * k + oColor[x];
-                    };
-                    window.button.attr("cardBackgroundColor", colorObj2Str(curColor));
-                }
-                else {
-                    _Control.window.button.text.setText(_Control.clickThing.longclickText);
-                };
+        const colorObj2Str = (colorObj) => { return colors.toString(colors.argb(colorObj.a, colorObj.r, colorObj.g, colorObj.b)) };
+        
+        window.button.attr("cardBackgroundColor", colorObj2Str(_touchVar.origin_button_color));
+        
+        const onPressing = () => {
+            let k = 0;
+            if (_touchVar.isPressing) {
+                const touchDuration = new Date().getTime() - _touchVar.down_touch_time;
+                k = touchDuration / _touchVar.longclickThresholdMs;
+            } else {
+                clearInterval(_touchVar.longclickColorIntervalID);
             };
 
+            if (k < 1.0) {
+                if (_Control.window.button.text.text() == _Control.clickThing.longclickText) {
+                    _Control.window.button.text.setText(_Control.running ? _Control.clickThing.stopText : _Control.clickThing.startText);
+                };
+                const oColor = _touchVar.origin_button_color;
+                const tColor = _touchVar.longclick_button_color;
+                const curColor = {};
+
+                for (let x in oColor) {
+                    curColor[x] = (tColor[x] - oColor[x]) * k + oColor[x];
+                };
+                window.button.attr("cardBackgroundColor", colorObj2Str(curColor));
+            }
+            else {
+                _Control.window.button.text.setText(_Control.clickThing.longclickText);
+            };
+        };
+        
+        window.button.setOnTouchListener(function (view, event) {
             switch (event.getAction()) {
                 case event.ACTION_DOWN:
                     _touchVar.down_win_x = window.getX();
