@@ -1,0 +1,1 @@
+require('../modules/plugin-autojs-memory-info').run();

@@ -1,0 +1,1 @@
+require('../modules/plugin-device-next-alarm-clock').run();

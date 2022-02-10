@@ -1,0 +1,10 @@
+{
+    "name": "Custom Ant Forest autoscript",
+    "main": "main.js",
+    "ignore": [
+        "build"
+    ],
+    "packageName": "com.tony.ant.forest",
+    "versionName": "develop_version",
+    "versionCode": 1
+}
